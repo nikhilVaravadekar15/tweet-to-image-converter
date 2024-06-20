@@ -86,9 +86,9 @@ export default function Home() {
           </div>
         ) : (
           <div className="flex flex-col gap-4 items-center justify-center">
-            <h1 className="text-2xl font-black text-center sm:text-2xl lg:text-4xl xl:text-5xl">
+            <h1 className="text-2xl font-black text-center sm:text-2xl md:text-3xl lg:text-4xl">
               Simple
-              <span className="mx-2 text-blue-600">Tweet-to-image</span>
+              <span className="mx-2 text-blue-600">tweet-to-image</span>
               converter
             </h1>
             <Input
@@ -104,6 +104,7 @@ export default function Home() {
                   console.log(result.error.issues);
                 }
               }}
+              className="block w-full p-6 border-4 rounded-full text-lg focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-black"
             />
           </div>
         )}

@@ -1,7 +1,11 @@
 import "./App.css";
 
 function App() {
-  return <>Hello world</>;
+  return (
+    <div className="h-screen w-screen flex items-center justify-center text-3xl font-bold">
+      Hello world
+    </div>
+  );
 }
 
 export default App;

@@ -1,23 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { z } from "zod";
+import React from "react";
+import { urlSchema } from "@/zod";
 import { Tweet } from "react-tweet";
-import React, { useEffect } from "react";
-import { Input } from "@/components/ui/input";
 import { Download } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import html2canvas from "html2canvas";
-
-const urlSchema = z
-  .string()
-  .url()
-  .startsWith("https://twitter.com")
-  .or(z.string().url().startsWith("https://x.com"));
+import { exportComponentAsPNG } from "react-component-export-image";
 
 export default function Home() {
-  const [inputUrl, setInputUrl] = React.useState<string>("");
+  const componentRef = React.useRef<HTMLDivElement>(null);
   const [tweetId, settweetId] = React.useState<string>("");
+  const [inputUrl, setInputUrl] = React.useState<string>("");
 
   function useDebounce(fn: Function, delay: number) {
     let timer: NodeJS.Timeout | null = null;
@@ -31,23 +25,10 @@ export default function Home() {
     };
   }
 
-  async function handleImageDownload() {
-    const element = document.getElementById("print"),
-      canvas = await html2canvas(element!),
-      data = canvas.toDataURL("image/jpg"),
-      link = document.createElement("a");
-
-    link.href = data;
-    link.download = `downloaded-image-${tweetId}.jpg`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceHandler = React.useCallback(useDebounce(setInputUrl, 500), []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (inputUrl) {
       const url = new URL(inputUrl);
 
@@ -62,49 +43,44 @@ export default function Home() {
 
   return (
     <main className="h-screen w-screen flex flex-col gap-4 items-center justify-center overflow-x-hidden">
-      <div className="w-[80%] md:w-[48%]">
+      <div className="w-[80%] md:w-[64%]">
         {tweetId ? (
           <div className="relative w-full flex items-center">
             <>
               <div
-                id="print"
+                ref={componentRef}
                 className="p-4 w-[96%] h-[60%] flex items-center justify-center"
               >
                 <Tweet id={tweetId} />
               </div>
-
               <Button
                 variant="outline"
                 onClick={() => {
-                  handleImageDownload();
+                  exportComponentAsPNG(componentRef);
                 }}
-                className="absolute rounded-full top-10 -right-2 shadow shadow-blue-300  hover:shadow hover:shadow-blue-500"
+                className="absolute rounded-full top-10 -right-2 shadow shadow-blue-300 hover:shadow hover:shadow-blue-500"
               >
                 <Download />
               </Button>
             </>
           </div>
         ) : (
-          <div className="flex flex-col gap-4 items-center justify-center">
-            <h1 className="text-2xl font-black text-center sm:text-2xl md:text-3xl lg:text-4xl">
-              Simple
+          <div className="w-full flex flex-col gap-4 items-center justify-center">
+            <h1 className="w-full text-center flex flex-col items-center justify-center text-4xl font-black sm:flex-row sm:text-3xl md:text-4xl lg:text-5xl">
+              <span>Simple</span>
               <span className="mx-2 text-blue-600">tweet-to-image</span>
-              converter
+              <span>converter</span>
             </h1>
             <Input
               type="url"
-              placeholder=""
               onChange={(event) => {
                 const value: string = event.target.value;
-
                 const result = urlSchema.safeParse(value);
                 if (result.success) {
                   debounceHandler(value);
-                } else {
-                  console.log(result.error.issues);
                 }
               }}
-              className="block w-full p-6 border-4 rounded-full text-lg focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-black"
+              className="block w-full p-6 border-4 rounded-full text-lg focus-visible:ring-0 focus-visible:ring-offset-0 md:w-[80%]"
             />
           </div>
         )}

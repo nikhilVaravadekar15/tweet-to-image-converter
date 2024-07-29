@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/twitter-32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tweet-to-image-converter</title>
+    <style>
+      .preloader {
+        height: 96vh;
+        width: 96vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="preloader">
+        <img src="/spinner.svg" alt="spinner" />
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
